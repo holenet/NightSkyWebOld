@@ -1,0 +1,19 @@
+{% extends 'cloud/base.html' %}
+
+{% block metadata %}
+	<meta name="view_name" content="file_list">
+{% endblock %}
+
+{% block content %}
+	<h3><a href="{% url 'cloud:file_upload' %}">Upload Here</a></h3>
+	<br>
+	{% for file in user_files %}
+		<div class="post">
+			<br>
+			<a href="{% url 'cloud:file_download' file_id=file.pk %}">Download Here</a>
+			<p>Author: {{ file.author }}</p>
+			<p>Description: {{ file.description|linebreaksbr }}</p>
+			<p>Uploaded datetime: {{ file.uploaded_at }}</p>
+		</div>
+	{% endfor %}
+{% endblock %}

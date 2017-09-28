@@ -1,0 +1,14 @@
+{% extends 'cloud/base.html' %}
+
+{% block metadata %}
+	<meta name="view_name" content="post_edit">
+{% endblock %}
+
+{% block content %}
+	<h1>{{ mode }}</h1>
+	<form method="POST" class="post-form">{% csrf_token %}
+		{{ form.as_p }}
+		<button type="submit" class="save btn btn-default">Save</button>
+	</form>
+{% endblock %}
+
