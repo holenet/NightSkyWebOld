@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^file/upload/$', views.file_upload, name='file_upload'),
     url(r'^file/download/(?P<file_id>[0-9]+)/$', views.file_download, name='file_download'),
 
-    # json
+    # json-only
     url(r'^post/find-by-index/(?P<post_index>[0-9]+)/$', views.post_find_by_index, name='post_find_by_index'),
+    url(r'^post/recent/$', views.post_recent, name='post_recent'),
 ]

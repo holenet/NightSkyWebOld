@@ -8,7 +8,7 @@ from wsgiref.util import FileWrapper
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 
@@ -19,13 +19,33 @@ from cloud.models import Post, Comment, UserFile
 @login_required
 def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
-    return render(request, 'cloud/post_list.html', {'posts': posts})
+    if 'JSON' in request.GET:
+        data = []
+        for post in posts:
+            data.append(dict(
+                id=post.pk,
+                author=str(post.author),
+                title=post.title,
+                datetime=str(post.published_date),
+                text=post.text,
+                comment_count=post.comments.count(),
+            ))
+        return JsonResponse(data, safe=False)
+    else:
+        return render(request, 'cloud/post_list.html', {'posts': posts})
 
 
 @login_required
 def post_detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-    return render(request, 'cloud/post_detail.html', {'post': post})
+    if 'JSON' in request.GET:
+        data = dict(
+            title=post.title,
+            author=str(post.author),
+        )
+        return JsonResponse(data, safe=False)
+    else:
+        return render(request, 'cloud/post_detail.html', {'post': post})
 
 
 @login_required
@@ -132,7 +152,9 @@ def post_find_by_index(request, post_index):
         text=post.text,
         author=str(post.author),
         datetime=str(post.published_date),
-        id=post.pk)
+        id=post.pk,
+        comment_count=post.comments.count(),
+    )
     comments = post.comments.all()
     comments_list = []
     for comment in comments:
@@ -144,3 +166,12 @@ def post_find_by_index(request, post_index):
         comments_list.append(comment_dict)
     queries['comments'] = comments_list
     return JsonResponse(queries, safe=False)
+
+
+@login_required
+def post_recent(request):
+    post = Post.objects.all().order_by('-published_date')[0]
+    if post is None:
+        return Http404()
+    data = dict(id=post.pk, author=str(post.author))
+    return JsonResponse(data, safe=False)
