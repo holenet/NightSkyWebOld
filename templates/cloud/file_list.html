@@ -5,15 +5,31 @@
 {% endblock %}
 
 {% block content %}
-	<h3><a href="{% url 'cloud:file_upload' %}">Upload Here</a></h3>
+    <h6>
+        <pre>{{ parent.path_stair|linebreaksbr }}</pre>
+    </h6>
+    {% if parent.parent %}
+        <h5><a href="{% url 'cloud:file_list' path=parent.parent.path %}">Back to Parent Folder</a></h5>
+    {% endif %}
+	<h3><a href="{% url 'cloud:file_upload' path=parent.path %}">Upload File</a></h3>
+    <h3><a href="{% url 'cloud:folder_new' path=parent.path %}">Create Folder</a></h3>
 	<br>
 	{% for file in user_files %}
-		<div class="post">
-			<br>
-			<a href="{% url 'cloud:file_download' file_id=file.pk %}">Download Here</a>
-			<p>Author: {{ file.author }}</p>
-			<p>Description: {{ file.description|linebreaksbr }}</p>
-			<p>Uploaded datetime: {{ file.uploaded_at }}</p>
-		</div>
+        {% if file.user_folder %}
+        <div class="folder">
+            <p><a href="{% url 'cloud:file_list' path=file.path %}">Explore Folder</a></p>
+            <p>Name: {{ file.name|linebreaksbr }}</p>
+            <p>Uploaded datetime: {{ file.uploaded_at }}</p>
+            <a href="{% url 'cloud:folder_delete' folder_id=file.pk %}" onclick="return confirm('Do you want to delete this folder and files?');">Delete Folder and Files</a>
+        </div>
+        {% else %}
+        <div class="file">
+            <p><a href="{% url 'cloud:file_download' file_id=file.pk %}">Download File</a></p>
+            <p>Name: {{ file.name|linebreaksbr }}</p>
+            <p>Type: {{ file.type }}</p>
+            <p>Uploaded datetime: {{ file.uploaded_at }}</p>
+            <a href="{%  url 'cloud:file_delete' file_id=file.pk %}" onclick="return confirm('Do you want to delete this file?');">Delete File</a>
+        </div>
+        {% endif %}
 	{% endfor %}
 {% endblock %}

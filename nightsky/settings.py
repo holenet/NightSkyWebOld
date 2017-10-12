@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '^(iz6*yvmx*gy#_libh%kl25z((lcscjlnq_5g+h^%81le7hnz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = [u'127.0.0.1', u'147.46.209.151', 'nightsky.ga']
+ALLOWED_HOSTS = [u'127.0.0.1', u'147.46.209.151', 'nightsky.ga', u'118.219.23.120']
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cloud.apps.CloudConfig',
+    'secret.apps.SecretConfig',
 ]
 
 MIDDLEWARE = [
@@ -108,11 +109,11 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Seoul'
 
-USE_I18N = True
+# USE_I18N = True
 
-USE_L10N = True
+# USE_L10N = True
 
-USE_TZ = True
+# USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)

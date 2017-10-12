@@ -15,8 +15,14 @@ class CommentForm(forms.ModelForm):
 
 
 class UserFileForm(forms.ModelForm):
-    description = forms.CharField(required=False, widget=forms.Textarea)
+    user_file = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
 
     class Meta:
         model = UserFile
-        fields = ('user_file', 'description',)
+        fields = ('user_file',)
+
+
+class UserFolderForm(forms.ModelForm):
+    class Meta:
+        model = UserFile
+        fields = ('user_folder',)
